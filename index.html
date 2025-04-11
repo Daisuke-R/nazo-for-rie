@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>りえ用解きゲーム byだいすけ</title>
+  <title>ホラー脱出ゲーム</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-        background: url('https://raw.githubusercontent.com/Daisuke-R/nazo-for-rie/main/code2.png') no-repeat center center fixed;
+      background-color: black;
+      background-image: url('background.jpg'); /* 背景画像があれば */
       background-size: cover;
       color: white;
       text-align: center;
       padding: 40px;
     }
     .card {
-      background-color: rgba(0, 0, 0, 0.7);
+      background-color: rgba(0, 0, 0, 0.8);
       border-radius: 12px;
       padding: 30px;
       max-width: 600px;
       margin: auto;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      box-shadow: 0 0 20px rgba(255,0,0,0.5);
     }
     input, button {
       font-size: 1.2rem;
@@ -27,48 +28,127 @@
       margin: 10px;
       border-radius: 8px;
     }
-    #success {
-      display: none;
-      color: red;
-      font-size: 1.5rem;
-    }
-    h1 {
-      color: red;
-    }
     #feedback {
       color: #ff4444;
       font-size: 1.2rem;
+    }
+    #success {
+      color: red;
+      font-size: 1.5rem;
+      display: none;
+    }
+    img {
+      max-width: 100%;
+      margin: 20px 0;
     }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>ホラー謎解きゲーム</h1>
-    <p>あなたの前に突然現れた謎の人物が告げる。</p>
-    <p>「君はこの部屋に閉じ込められた。 ゲームをクリアすることで、命が助かるだろう。 だが、一歩間違えれば…この場所に永遠に閉じ込められる。」</p>
-    <p>まずは、この暗号を解け。</p>
-    <p>「答えは1つだけ。この数字を答えろ。」</p>
-    <img src="https://raw.githubusercontent.com/Daisuke-R/nazo-for-rie/main/code1.png" alt="暗号画像" width="300" /><br>
-    <p>この画像に隠された数字は？</p>
-    <input type="text" id="answer" placeholder="答えを入力" />
-    <button onclick="checkAnswer()">解答する</button>
+    <h1>ホラー脱出ゲーム</h1>
+    <p id="narration"></p>
+    <img id="questionImage" src="" alt="謎画像" />
+    <p id="questionText"></p>
+    <input type="text" id="answerInput" placeholder="答えを入力" />
+    <button onclick="submitAnswer()">解答する</button>
     <p id="feedback"></p>
-    <div id="success">
-      🎉 正解… 次の部屋へ進める
-    </div>
+    <div id="success">🎉 正解！次の部屋へ...</div>
   </div>
 
   <script>
-    function checkAnswer() {
-      const input = document.getElementById("answer").value.trim();
-      const feedback = document.getElementById("feedback");
-      if (input === "666") {
-        feedback.textContent = "正解です…次の部屋へ。";
+    const questions = [
+      {
+        narration: "壁に血で書かれた数式が浮かび上がる...",
+        image: "code1.png",
+        text: "『ろく→2、に→4、さん→？』 答えは？（数字1桁）",
+        answer: "3"
+      },
+      {
+        narration: "3人の人物が証言している...嘘をついているのは誰？",
+        image: "code2.png",
+        text: "誰か一人が嘘をついている。嘘つきは誰？（A/B/C）",
+        answer: "B"
+      },
+      {
+        narration: "鏡の部屋に入った。鏡には何かが映っている...",
+        image: "code3.png",
+        text: "『右に2回、左に1回』進むと、鏡に浮かぶ文字は？（ひらがな1文字）",
+        answer: "くち"
+      },
+      {
+        narration: "マネキンたちがこちらを見ている...",
+        image: "code4.png",
+        text: "名前順に並べると現れる番号は？（数字3桁）",
+        answer: "428"
+      },
+      {
+        narration: "回転木馬が止まらない...",
+        image: "code5.png",
+        text: "青い馬は何番目に来る？（色名を入力）",
+        answer: "青"
+      },
+      {
+        narration: "射的場。的が…見えない？",
+        image: "code6.png",
+        text: "『当てるほどに見えなくなる』これは何？（ひらがな）",
+        answer: "かげ"
+      },
+      {
+        narration: "観覧車が永遠に回っている…",
+        image: "code7.png",
+        text: "15分で1周。1時間に何回まわる？",
+        answer: "4"
+      },
+      {
+        narration: "チケット売り場に怪文書が…",
+        image: "code8.png",
+        text: "『うらがわを読め』 裏にあった英語5文字は？",
+        answer: "ticket"
+      },
+      {
+        narration: "滲んだ手紙が…",
+        image: "code9.png",
+        text: "並べ替えてできる英単語は？（叫び）",
+        answer: "scream"
+      },
+      {
+        narration: "園長の部屋。すべての謎の答えを足せ…",
+        image: "code10.png",
+        text: "数字をすべて足した合計は？（3桁の数字）",
+        answer: "666"
+      }
+    ];
+
+    let current = 0;
+
+    function showQuestion() {
+      const q = questions[current];
+      document.getElementById("narration").textContent = q.narration;
+      document.getElementById("questionImage").src = q.image;
+      document.getElementById("questionText").textContent = q.text;
+      document.getElementById("answerInput").value = "";
+      document.getElementById("feedback").textContent = "";
+      document.getElementById("success").style.display = "none";
+    }
+
+    function submitAnswer() {
+      const input = document.getElementById("answerInput").value.trim().toLowerCase();
+      const correct = questions[current].answer.toLowerCase();
+      if (input === correct) {
         document.getElementById("success").style.display = "block";
+        current++;
+        if (current < questions.length) {
+          setTimeout(showQuestion, 2000);
+        } else {
+          document.querySelector(".card").innerHTML = "<h1>🎊 脱出成功！🎊</h1><p>おめでとう、すべての謎を解いた！</p>";
+        }
       } else {
-        feedback.textContent = "間違えました。もう一度挑戦するんだ。";
+        document.getElementById("feedback").textContent = "違うようだ...もう一度。";
       }
     }
+
+    // 初期表示
+    showQuestion();
   </script>
 </body>
 </html>
