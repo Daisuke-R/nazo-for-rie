@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ヒミツのナゾ</title>
+  <style>
+    body { font-family: 'sans-serif'; text-align: center; padding: 2em; background: #fff8f0; }
+    input { padding: 0.5em; font-size: 1em; }
+    button { margin-top: 1em; padding: 0.5em 1em; font-size: 1em; }
+  </style>
+</head>
+<body>
+  <h1>🌸 ナゾトキ for りえ 🌸</h1>
+  <p>この言葉が示すものはな〜んだ？</p>
+  <h3>「りえと初めて手をつないだ場所」</h3>
+
+  <input id="answer" placeholder="ひらがなで入力してね">
+  <br>
+  <button onclick="checkAnswer()">答える</button>
+  <p id="result"></p>
+
+  <script>
+    function checkAnswer() {
+      const input = document.getElementById("answer").value.trim();
+      const correct = "神戸"; // ← 正解をここに設定！
+      const result = document.getElementById("result");
+
+      if (input === correct) {
+        result.innerHTML = "🎉 正解！次のページへ...";
+        // 遷移できるようにするなら以下を追加
+        // setTimeout(() => window.location.href = 'stage2.html', 2000);
+      } else {
+        result.innerHTML = "うーん、ちがうかも！";
+      }
+    }
+  </script>
+</body>
+</html>
