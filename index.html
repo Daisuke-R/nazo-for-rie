@@ -1,36 +1,72 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>ヒミツのナゾ</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>りえ向けホラー謎解きゲーム（今後verUPしていくbyだいすけ）</title>
   <style>
-    body { font-family: 'sans-serif'; text-align: center; padding: 2em; background: #fff8f0; }
-    input { padding: 0.5em; font-size: 1em; }
-    button { margin-top: 1em; padding: 0.5em 1em; font-size: 1em; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://i.imgur.com/4dxrjwS.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    .card {
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 600px;
+      margin: auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+    input, button {
+      font-size: 1.2rem;
+      padding: 10px;
+      margin: 10px;
+      border-radius: 8px;
+    }
+    #success {
+      display: none;
+      color: red;
+      font-size: 1.5rem;
+    }
+    h1 {
+      color: red;
+    }
+    #feedback {
+      color: #ff4444;
+      font-size: 1.2rem;
+    }
   </style>
 </head>
 <body>
-  <h1>🌸 ナゾトキ for りえ 🌸</h1>
-  <p>この言葉が示すものはな〜んだ？</p>
-  <h3>「りえと初めて手をつないだ場所」</h3>
-
-  <input id="answer" placeholder="ひらがなで入力してね">
-  <br>
-  <button onclick="checkAnswer()">答える</button>
-  <p id="result"></p>
+  <div class="card">
+    <h1>ホラー謎解きゲーム</h1>
+    <p>あなたの前に突然現れた謎の人物が告げる。</p>
+    <p>「君はこの部屋に閉じ込められた。 ゲームをクリアすることで、命が助かるだろう。 だが、一歩間違えれば…この場所に永遠に閉じ込められる。」</p>
+    <p>まずは、この暗号を解け。</p>
+    <p>「答えは1つだけ。この数字を答えろ。」</p>
+    <img src="https://i.imgur.com/OTvw93a.png" alt="暗号画像" width="300" /><br>
+    <p>この画像に隠された数字は？</p>
+    <input type="text" id="answer" placeholder="答えを入力" />
+    <button onclick="checkAnswer()">解答する</button>
+    <p id="feedback"></p>
+    <div id="success">
+      🎉 正解… 次の部屋へ進める
+    </div>
+  </div>
 
   <script>
     function checkAnswer() {
       const input = document.getElementById("answer").value.trim();
-      const correct = "神戸"; // ← 正解をここに設定！
-      const result = document.getElementById("result");
-
-      if (input === correct) {
-        result.innerHTML = "🎉 正解！次のページへ...";
-        // 遷移できるようにするなら以下を追加
-        // setTimeout(() => window.location.href = 'stage2.html', 2000);
+      const feedback = document.getElementById("feedback");
+      if (input === "666") {
+        feedback.textContent = "正解です…次の部屋へ。";
+        document.getElementById("success").style.display = "block";
       } else {
-        result.innerHTML = "うーん、ちがうかも！";
+        feedback.textContent = "間違えました。もう一度挑戦するんだ。";
       }
     }
   </script>
