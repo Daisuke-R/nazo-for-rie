@@ -1,146 +1,103 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>今日のAGAがんばれ</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>脱出ゲーム for 理恵</title>
   <style>
     body {
-      background-color: #000;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
+      background-color: #111;
+      color: #eee;
+      font-family: 'Yu Gothic', sans-serif;
+      padding: 2em;
       text-align: center;
-      padding: 40px 20px;
     }
-    .card {
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid #444;
-      border-radius: 16px;
-      padding: 30px;
-      max-width: 700px;
-      margin: auto;
-      box-shadow: 0 0 20px red;
+    .question-box {
+      margin: 2em auto;
+      padding: 2em;
+      border: 2px solid #444;
+      border-radius: 1em;
+      background-color: #222;
+      max-width: 600px;
     }
-    h1, h2 {
-      color: #ff4444;
+    input[type="text"] {
+      padding: 0.5em;
+      width: 80%;
+      font-size: 1em;
     }
-    input, button {
-      font-size: 1.2rem;
-      padding: 10px;
-      margin-top: 10px;
-      border-radius: 10px;
+    button {
+      margin-top: 1em;
+      padding: 0.5em 2em;
+      font-size: 1em;
+      background-color: #444;
+      color: #eee;
       border: none;
+      border-radius: 0.5em;
+      cursor: pointer;
     }
-    .hidden {
-      display: none;
-    }
-    #feedback {
-      color: #ff6666;
-      margin-top: 10px;
+    #end-message {
+      white-space: pre-line;
     }
   </style>
 </head>
 <body>
-  <div class="card" id="intro">
-    <h1>しげとうりえちゃんのホラー脱出ゲーム</h1>
-    <p>気がつくと、りえは暗い部屋の中にいた。</p>
-    <p>どこかで不気味な声がする。</p>
-    <p><em>「この10の謎を解け。さもなくば…永遠にここに。」</em></p>
-    <button onclick="startGame()">始める</button>
-  </div>
-
-  <div class="card hidden" id="game">
-    <h2 id="q-title">第1問</h2>
-    <p id="q-text"></p>
+  <h1>脱出ゲーム：理恵へ</h1>
+  <div class="question-box" id="game-box">
+    <p id="question">読み込み中...</p>
     <input type="text" id="answer" placeholder="答えを入力">
     <br>
     <button onclick="checkAnswer()">答える</button>
     <p id="feedback"></p>
   </div>
-
-  <div class="card hidden" id="clear">
-    <h2>🎉 脱出成功 🎉</h2>
-    <p>10の謎をすべて解いたあなたは、無事この館を抜け出した…</p>
-    <p>…すると、だいすけからメモが落ちてきた。</p>
-    <p><strong>「りえ、最後まで解いてくれてありがとう。<br>ほんとはただ一緒に遊びたかっただけなんだ。」</strong></p>
-    <p>「大好きです」</p>
-    <p>💌</p>
+  <div id="end-message" style="display:none">
+    <h2>脱出成功！</h2>
+    <p>理恵へ。</p>
+    <p>
+      理恵が謎を解いてくれて、
+      ずっとそばにいてくれて、
+      俺は世界で一番幸せです。
+      この先も、どんな謎でも一緒に解いていこう。
+      大好きだよ。
+    </p>
   </div>
-
   <script>
-    const questions = [
-      {
-        text: "【第1問】\n「お・ば・け・の・し・ろ」この中で一つだけ異なる種類の文字がある。それは？（ひらがなで）",
-        answer: "ば"
-      },
-      {
-        text: "【第2問】\n「るすなきちょ」←これを並べ替えると出てくる言葉は？（ひらがなで）",
-        answer: "しんりょくつ"
-      },
-      {
-        text: "【第3問】\n「みみみみけけけけなななな」→これは何の音？（カタカナで）",
-        answer: "ミッキーマウス"
-      },
-      {
-        text: "【第4問】\n「さかさにすると ‘こたえ’ が見える文字列：ʞɔnɟ」→ ひらがなで答えて。",
-        answer: "ふっく"
-      },
-      {
-        text: "【第5問】\n「03:03 → ?」この法則が示す数字は？（数字のみ）\nヒント：デジタル時計で左右対称。",
-        answer: "808"
-      },
-      {
-        text: "【第6問】\n「がいこつ - こつ = ?」言葉の引き算。残るのは？（ひらがなで）",
-        answer: "がい"
-      },
-      {
-        text: "【第7問】\n次の文の中に英語が1つ隠れています。「あいきゃんとしー」→何の英語？（英語で）",
-        answer: "icantsee"
-      },
-      {
-        text: "【第8問】\n次の文章の「2文字目を1行おきに読め」\n\nこえがきこえる\nもうすぐくるよ\nはしれはやく\nちかづいてるよ\n\n→ 出てくる言葉は？（ひらがなで）",
-        answer: "くるはやく"
-      },
-      {
-        text: "【第9問】\n次の中から正しいものを選べ（ひらがなで）\nA: さむけ B: おんど C: しつど\nヒント：霊が現れるときに感じるのは？",
-        answer: "さむけ"
-      },
-      {
-        text: "【第10問】\nこの問題には答えがない。\nなぜなら、もう君は…\n\n→ 答え：すべてひらがなで「わかってる」",
-        answer: "わかってる"
-      }
+    const stages = [
+      { question: "第1問：二人で一番汗かいたスポットは？多分もう行きたくない。", answer: "高御位山" },
+      { question: "第2問：嫌いな人がいないスポーツはなに？", answer: "スキー" },
+      { question: "第3問：この世で一番大切な人は？", answer: "大輔" },
+      { question: "第4問：『にんじん』を英語で？", answer: "carrot" },
+      { question: "第5問：私たちが初めてデートした場所は？", answer: "淡路" },
+      { question: "第6問：あの時、ふたりで訪れたこわかった“あの高い建物・・・”。\n今でも忘れられない……。\nそれは何という建物だった？", answer: "海峡ゆめタワー" },
+      { question: "第7問：私たちが初めて手をつないだ場所は？", answer: "神戸" },
+      { question: "第8問：おぼれても構わない魚は？", answer: "鯉" },
+      { question: "第9問：大輔の別名は（動物で）？", answer: "スカンク" },
+      { question: "第10問：最後のカギ、4桁の数字を入力せよ！", answer: "0507" }
     ];
 
-    let current = 0;
+    let currentStage = 0;
 
-    function startGame() {
-      document.getElementById("intro").classList.add("hidden");
-      document.getElementById("game").classList.remove("hidden");
-      loadQuestion();
-    }
-
-    function loadQuestion() {
-      document.getElementById("q-title").textContent = `第${current + 1}問`;
-      document.getElementById("q-text").textContent = questions[current].text;
+    function showStage() {
+      document.getElementById("question").innerText = stages[currentStage].question;
       document.getElementById("answer").value = "";
-      document.getElementById("feedback").textContent = "";
+      document.getElementById("feedback").innerText = "";
     }
 
     function checkAnswer() {
-      const input = document.getElementById("answer").value.trim().toLowerCase();
-      const correct = questions[current].answer;
-      if (input === correct) {
-        current++;
-        if (current >= questions.length) {
-          document.getElementById("game").classList.add("hidden");
-          document.getElementById("clear").classList.remove("hidden");
+      const input = document.getElementById("answer").value.trim();
+      if (input === stages[currentStage].answer) {
+        currentStage++;
+        if (currentStage >= stages.length) {
+          document.getElementById("game-box").style.display = "none";
+          document.getElementById("end-message").style.display = "block";
         } else {
-          loadQuestion();
+          showStage();
         }
       } else {
-        document.getElementById("feedback").textContent = "違うみたい…。もう一度考えてみて。";
+        document.getElementById("feedback").innerText = "違うよ、もう一度考えて！";
       }
     }
+
+    showStage();
   </script>
 </body>
 </html>
